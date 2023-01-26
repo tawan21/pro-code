@@ -1,22 +1,95 @@
 import React, { useState } from 'react'
 import EditorWindow from './EditorWindow'
-import { langOptions } from '../constants/langOptions';
-import LangDropdown from './LangDropdown';
-import ThemeDropdown from './ThemeDropdown';
+import { langOptions } from '../constants/langOptions'
+import LangDropdown from './LangDropdown'
+import ThemeDropdown from './ThemeDropdown'
+import axios from 'axios'
+import { Buffer } from 'buffer'
+import OutputDetails from './OutputDetails'
+import OutputWindow from './OutputWindow'
 
 const pyDefault = '# some comment'
 
 const Landing = () => {
-  const [code, setCode] = useState(pyDefault);
-  const [language, setLanguage] = useState(langOptions[0]);
-  const [theme, setTheme] = useState('cobalt');
+  const [code, setCode] = useState(pyDefault)
+  const [language, setLanguage] = useState(langOptions[0])
+  const [theme, setTheme] = useState('cobalt')
+  const [processing, setProcessing] = useState(null)
+  const [customInput, setCustomInput] = useState("")
+  const [outputDetails, setOutputDetails] = useState(null);
 
   const onSelectChange = (sl) => {
     setLanguage(sl)
   }
 
   const handleThemeChange = () => {
-    
+
+  }
+
+  const handleCompile = async () => {
+    setProcessing(true)
+
+    const formData = {
+      language_id: language.id,
+      source_code: Buffer.from(code).toString('base64'),
+      stdin: Buffer.from(customInput).toString('base64')
+    }
+
+    console.log(formData)
+
+    try {
+      const response = await axios.post(process.env.REACT_APP_RAPID_API_URL, formData, {
+        headers: {
+          'content-type': 'application/json',
+          'Content-Type': 'application/json',
+          'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY
+        },
+        params: {
+          base64_encoded: 'true',
+          fields: '*'
+        }
+      })
+
+      console.log(response.data)
+
+      const token = response.data.token
+      checkStatus(token)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const checkStatus = async (token) => {
+    try {
+      const response = await axios.get(process.env.REACT_APP_RAPID_API_URL + '/' + token, {
+        headers: {
+          'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY
+        },
+        params: {
+          base64_encoded: 'true',
+          fields: '*'
+        }
+      })
+
+      const statusId = response.data.status?.id
+
+      if (statusId === 1 || statusId === 2) {
+        setTimeout(() => {
+          checkStatus(token)
+        }, 2000)
+        return
+      }
+
+      setProcessing(false)
+      setOutputDetails(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.log(error)
+      setProcessing(false)
+    }
   }
 
   const onChange = (action, data) => {
@@ -48,6 +121,15 @@ const Landing = () => {
         language={language?.value}
         theme={theme}
       />
+      <button
+        onClick={handleCompile}
+        disabled={!code}
+        className='mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0'
+      >
+        {processing ? "Processing..." : "Compile and Execute"}
+      </button>
+      <OutputWindow outputDetails={outputDetails} />
+      {outputDetails && <OutputDetails outputDetails={outputDetails} />}
     </>
   )
 }
