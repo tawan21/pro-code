@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EditorWindow from './EditorWindow'
 import { langOptions } from '../constants/langOptions'
 import LangDropdown from './LangDropdown'
@@ -7,13 +7,14 @@ import axios from 'axios'
 import { Buffer } from 'buffer'
 import OutputDetails from './OutputDetails'
 import OutputWindow from './OutputWindow'
+import { defineTheme } from '../lib/defineTheme'
 
 const pyDefault = '# some comment'
 
 const Landing = () => {
   const [code, setCode] = useState(pyDefault)
   const [language, setLanguage] = useState(langOptions[0])
-  const [theme, setTheme] = useState('cobalt')
+  const [theme, setTheme] = useState('light')
   const [processing, setProcessing] = useState(null)
   const [customInput, setCustomInput] = useState("")
   const [outputDetails, setOutputDetails] = useState(null);
@@ -22,8 +23,9 @@ const Landing = () => {
     setLanguage(sl)
   }
 
-  const handleThemeChange = () => {
-
+  const handleThemeChange = (th) => {
+    if (['light', 'vs-dark'].includes(th.value)) setTheme(th)
+    else defineTheme(th.value).then((_) => setTheme(th))
   }
 
   const handleCompile = async () => {
@@ -104,6 +106,10 @@ const Landing = () => {
     }
   }
 
+  useEffect(() => {
+    handleThemeChange({ value: 'light', label: 'Light (default)' })
+  }, [])
+
   return (
     <>
       <div className='h-2 w-full bg-gradient-to-l from-pink-500 via-red-500 to-yellow-500'></div>
@@ -119,7 +125,7 @@ const Landing = () => {
         code={code}
         onChange={onChange}
         language={language?.value}
-        theme={theme}
+        theme={theme.value}
       />
       <button
         onClick={handleCompile}
