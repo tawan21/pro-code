@@ -13,7 +13,7 @@ const OutputWindow = ({ outputDetails }) => {
       )
     } else if (statusId === 3) {
       return (
-        <pre className="px-2 py-1 font-normal text-xs text-green-500">
+        <pre className="px-2 py-1 font-normal text-sm text-green-400">
           {Buffer.from(outputDetails.stdout, 'base64').toString() !== null
             ? `${Buffer.from(outputDetails.stdout, 'base64').toString()}`
             : null}

@@ -8,8 +8,9 @@ import { Buffer } from 'buffer'
 import OutputDetails from './OutputDetails'
 import OutputWindow from './OutputWindow'
 import { defineTheme } from '../lib/defineTheme'
+import CustomInput from './CustomInput'
 
-const pyDefault = '# some comment'
+const pyDefault = 'print("Welcome to Pro-Code!")'
 
 const Landing = () => {
   const [code, setCode] = useState(pyDefault)
@@ -121,21 +122,33 @@ const Landing = () => {
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>
       </div>
-      <EditorWindow
-        code={code}
-        onChange={onChange}
-        language={language?.value}
-        theme={theme.value}
-      />
-      <button
-        onClick={handleCompile}
-        disabled={!code}
-        className='mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0'
-      >
-        {processing ? "Processing..." : "Compile and Execute"}
-      </button>
-      <OutputWindow outputDetails={outputDetails} />
-      {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+      <div className='flex flex-col xl:flex-row space-y-4 xl:space-x-4 items-start px-4 py-4'>
+        <div className='flex flex-col w-full xl:w-[70%] h-full justify-start items-end'>
+          <EditorWindow
+            code={code}
+            onChange={onChange}
+            language={language?.value}
+            theme={theme.value}
+          />
+        </div>
+        <div className='right-container flex flex-shrink-0 w-full xl:w-[30%] flex-col'>
+          <OutputWindow outputDetails={outputDetails} />
+          <div className='flex flex-col items-end my-5'>
+            <CustomInput
+              customInput={customInput}
+              setCustomInput={setCustomInput}
+            />
+            <button
+              onClick={handleCompile}
+              disabled={!code || processing}
+              className={`mt-4 border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-green-700 text-white ${!code || processing ? 'opacity-50' : 'hover:shadow transition duration-150'}`}
+            >
+              {processing ? "Processing..." : "Run Code"}
+            </button>
+          </div>
+          {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+        </div>
+      </div>
     </>
   )
 }

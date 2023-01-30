@@ -17,7 +17,6 @@ const EditorWindow = ({ onChange, language, code, theme }) => {
         language={language}
         value={value}
         theme={theme}
-        defaultValue='// some comment'
         onChange={handleChange}
       />
     </div>
