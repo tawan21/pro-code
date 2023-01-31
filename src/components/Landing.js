@@ -122,8 +122,8 @@ const Landing = () => {
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>
       </div>
-      <div className='flex flex-col xl:flex-row space-y-4 xl:space-x-4 items-start px-4 py-4'>
-        <div className='flex flex-col w-full xl:w-[70%] h-full justify-start items-end'>
+      <div className='grid grid-cols-1 md:grid-cols-3 items-start px-4 py-4 gap-4'>
+        <div className='col-span-1 md:col-span-2'>
           <EditorWindow
             code={code}
             onChange={onChange}
@@ -131,7 +131,7 @@ const Landing = () => {
             theme={theme.value}
           />
         </div>
-        <div className='right-container flex flex-shrink-0 w-full xl:w-[30%] flex-col'>
+        <div className='col-span-1 right-container flex flex-shrink-0 flex-col'>
           <OutputWindow outputDetails={outputDetails} />
           <div className='flex flex-col items-end my-5'>
             <CustomInput

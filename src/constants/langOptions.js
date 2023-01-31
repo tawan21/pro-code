@@ -6,6 +6,18 @@ export const langOptions = [
     value: "python",
   },
   {
+    id: 50,
+    name: "C (GCC 9.2.0)",
+    label: "C (GCC 9.2.0)",
+    value: "c",
+  },
+  {
+    id: 54,
+    name: "C++ (GCC 9.2.0)",
+    label: "C++ (GCC 9.2.0)",
+    value: "cpp",
+  },
+  {
     id: 63,
     name: "JavaScript (Node.js 12.14.0)",
     label: "JavaScript (Node.js 12.14.0)",
@@ -63,18 +75,6 @@ export const langOptions = [
     id: 53,
     name: "C++ (GCC 8.3.0)",
     label: "C++ (GCC 8.3.0)",
-    value: "cpp",
-  },
-  {
-    id: 50,
-    name: "C (GCC 9.2.0)",
-    label: "C (GCC 9.2.0)",
-    value: "c",
-  },
-  {
-    id: 54,
-    name: "C++ (GCC 9.2.0)",
-    label: "C++ (GCC 9.2.0)",
     value: "cpp",
   },
   {

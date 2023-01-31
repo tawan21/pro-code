@@ -4,7 +4,6 @@ const CustomInput = ({ customInput, setCustomInput }) => {
   return (
     <textarea
       rows={5}
-      res
       value={customInput}
       onChange={(e) => setCustomInput(e.target.value)}
       placeholder={'Custom Input'}
