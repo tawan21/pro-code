@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 
-const Login = () => {
-  const [details, setDetails] = useState({ email: "", password: "" })
+const Signup = () => {
+  const [details, setDetails] = useState({ name: "", email: "", password: "" })
   const history = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const resp = await axios.post("http://localhost:5000/api/auth/login", JSON.stringify({ email: details.email, password: details.password }), {
+    const resp = await axios.post("http://localhost:5000/api/auth/register", JSON.stringify({ name: details.name, email: details.email, password: details.password }), {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -28,6 +28,12 @@ const Login = () => {
       <div className="w-full max-w-xs">
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
           <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+              Name
+            </label>
+            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="First Name" value={details.name} onChange={handleChange} />
+          </div>
+          <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
               Email
             </label>
@@ -41,10 +47,10 @@ const Login = () => {
           </div>
           <div className="flex items-center justify-between">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-              Sign In
+              Register
             </button>
-            <Link to="/" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
-              Register instead
+            <Link to="/login" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+              Sign In instead
             </Link>
           </div>
         </form>
@@ -53,4 +59,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Signup
