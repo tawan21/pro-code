@@ -9,10 +9,12 @@ import OutputDetails from './OutputDetails'
 import OutputWindow from './OutputWindow'
 import { defineTheme } from '../lib/defineTheme'
 import CustomInput from './CustomInput'
+import { Link } from 'react-router-dom'
 
 const pyDefault = 'print("Welcome to Pro-Code!")'
 
 const Landing = () => {
+  const [user, setUser] = useState("")
   const [code, setCode] = useState(pyDefault)
   const [language, setLanguage] = useState(langOptions[0])
   const [theme, setTheme] = useState('light')
@@ -55,6 +57,7 @@ const Landing = () => {
       })
 
       console.log(response.data)
+      addCode()
 
       const token = response.data.token
       checkStatus(token)
@@ -107,19 +110,45 @@ const Landing = () => {
     }
   }
 
+  const getUser = async () => {
+    const resp = await axios.post("http://localhost:5000/api/auth/getUser", {}, {
+      headers: {
+        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQwOWNhYTNiNDJkODI2ZWUzZDU2YmUzIn0sImlhdCI6MTY3ODcwNzUwMX0.OWv47xMSn31oBemRxQcoNYICYgJARNIfUmsRCVQBstk'
+      }
+    })
+    setUser(resp.data.email)
+  }
+
+  const addCode = async () => {
+    const resp = await axios.post("http://localhost:5000/api/snippet/add", {
+      code: code
+    }, {
+      headers: {
+        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQwOWNhYTNiNDJkODI2ZWUzZDU2YmUzIn0sImlhdCI6MTY3ODcwNzUwMX0.OWv47xMSn31oBemRxQcoNYICYgJARNIfUmsRCVQBstk'
+      }
+    })
+  }
+
   useEffect(() => {
     handleThemeChange({ value: 'light', label: 'Light (default)' })
+    getUser()
   }, [])
 
   return (
     <>
       <div className='h-2 w-full bg-gradient-to-l from-pink-500 via-red-500 to-yellow-500'></div>
-      <div className='flex flex-row'>
+      <div className='flex flex-row justify-around'>
         <div className="px-4 py-2">
           <LangDropdown onSelectChange={onSelectChange} />
         </div>
         <div className="px-4 py-2">
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
+        </div>
+        <div className="flex items-center space-x-2">
+          <span>
+            Signed in with {user}
+          </span>
+          <button className='border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-red-600 text-white hover:shadow transition duration-150 text-sm'>Logout</button>
         </div>
       </div>
       <div className='grid grid-cols-1 md:grid-cols-3 items-start px-4 py-4 gap-4'>
@@ -131,7 +160,8 @@ const Landing = () => {
             theme={theme.value}
           />
         </div>
-        <div className='col-span-1 right-container flex flex-shrink-0 flex-col'>
+        <div className='col-span-1 right-container flex flex-shrink-0 flex-col space-y-2'>
+          <Link to='/snippets' className='text-center border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-blue-700 text-white hover:shadow transition duration-150'>My Code Snippets</Link>
           <OutputWindow outputDetails={outputDetails} />
           <div className='flex flex-col items-end my-5'>
             <CustomInput

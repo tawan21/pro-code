@@ -7,7 +7,17 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 const fetchuser = require('../database/fetchuser');
 
-router.post('/add', [
+router.get('/getByUser', fetchuser, async (req, res) => {
+  try {
+    const codes = await Snippet.find({ user: req.user.id });
+    res.json(codes)
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+})
+
+router.post('/add', fetchuser, [
   body('code', 'Code cannot be blank').exists()
 ], async (req, res) => {
   let success = false;
@@ -19,6 +29,7 @@ router.post('/add', [
 
   try {
     const snippet = await Snippet.create({
+      user: req.user.id,
       code: req.body.code
     });
 

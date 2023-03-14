@@ -38,9 +38,11 @@ router.post('/register', [
       }
     }
     const authtoken = jwt.sign(data, JWT_SECRET);
-    // res.json(user)
+    res.cookie("user", authtoken, {
+      httpOnly: true, sameSite: 'lax'
+    })
     success = true;
-    res.json({ success, authtoken })
+    res.json({ success })
 
   }
   catch (error) {
@@ -82,7 +84,10 @@ router.post('/login', [
       }
     }
     const authtoken = jwt.sign(data, JWT_SECRET);
-    res.json({ success, authtoken })
+    res.cookie("user", authtoken, {
+      httpOnly: true, sameSite: 'lax'
+    })
+    res.json({ success })
 
   } catch (error) {
     console.error(error.message);

@@ -15,8 +15,9 @@ const Login = () => {
       }
     })
 
-    if (resp.data.success)
+    if (resp.data.success) {
       history("/landing")
+    }
   }
 
   const handleChange = (e) => {
