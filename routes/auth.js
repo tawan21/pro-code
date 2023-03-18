@@ -38,11 +38,9 @@ router.post('/register', [
       }
     }
     const authtoken = jwt.sign(data, JWT_SECRET);
-    res.cookie("user", authtoken, {
-      httpOnly: true, sameSite: 'lax'
-    })
     success = true;
-    res.json({ success })
+
+    res.json({ success, authtoken })
 
   }
   catch (error) {
@@ -77,17 +75,15 @@ router.post('/login', [
       return res.status(400).json({ success, error: "Please login again with correct credentials" });
     }
 
-    success = true;
     const data = {
       user: {
         id: user.id
       }
     }
     const authtoken = jwt.sign(data, JWT_SECRET);
-    res.cookie("user", authtoken, {
-      httpOnly: true, sameSite: 'lax'
-    })
-    res.json({ success })
+    success = true;
+
+    res.json({ success, authtoken })
 
   } catch (error) {
     console.error(error.message);

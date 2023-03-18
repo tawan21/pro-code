@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 const fetchuser = require('../database/fetchuser');
+const { now } = require('mongoose');
 
 router.get('/getByUser', fetchuser, async (req, res) => {
   try {
@@ -39,6 +40,32 @@ router.post('/add', fetchuser, [
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
+})
+
+router.put('/update/:id', fetchuser, async (req, res) => {
+  const { code } = req.body;
+  try {
+    // Create a newNote object
+    const newCode = {};
+
+    newCode.code = code;
+    newCode.date = now()
+
+    let excode = await Snippet.findById(req.params.id);
+
+    if (!excode)
+      return res.status(404).send("Not Found");
+
+    if (excode.user.toString() !== req.user.id)
+      return res.status(401).send("Not Allowed");
+
+    excode = await Snippet.findByIdAndUpdate(req.params.id, { $set: newCode }, { new: true });
+    res.json({ excode });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+
 })
 
 module.exports = router

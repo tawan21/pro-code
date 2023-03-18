@@ -9,11 +9,13 @@ import OutputDetails from './OutputDetails'
 import OutputWindow from './OutputWindow'
 import { defineTheme } from '../lib/defineTheme'
 import CustomInput from './CustomInput'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const pyDefault = 'print("Welcome to Pro-Code!")'
 
 const Landing = () => {
+  const location = useLocation()
+  const propsData = location.state
   const [user, setUser] = useState("")
   const [code, setCode] = useState(pyDefault)
   const [language, setLanguage] = useState(langOptions[0])
@@ -57,7 +59,11 @@ const Landing = () => {
       })
 
       console.log(response.data)
-      addCode()
+
+      if (propsData)
+        updateCode(propsData.id)
+      else
+        addCode()
 
       const token = response.data.token
       checkStatus(token)
@@ -113,7 +119,7 @@ const Landing = () => {
   const getUser = async () => {
     const resp = await axios.post("http://localhost:5000/api/auth/getUser", {}, {
       headers: {
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQwOWNhYTNiNDJkODI2ZWUzZDU2YmUzIn0sImlhdCI6MTY3ODcwNzUwMX0.OWv47xMSn31oBemRxQcoNYICYgJARNIfUmsRCVQBstk'
+        'auth-token': localStorage.token
       }
     })
     setUser(resp.data.email)
@@ -124,7 +130,17 @@ const Landing = () => {
       code: code
     }, {
       headers: {
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQwOWNhYTNiNDJkODI2ZWUzZDU2YmUzIn0sImlhdCI6MTY3ODcwNzUwMX0.OWv47xMSn31oBemRxQcoNYICYgJARNIfUmsRCVQBstk'
+        'auth-token': localStorage.token
+      }
+    })
+  }
+
+  const updateCode = async (id) => {
+    const resp = await axios.put(`http://localhost:5000/api/snippet/update/${id}`, {
+      code: code
+    }, {
+      headers: {
+        'auth-token': localStorage.token
       }
     })
   }

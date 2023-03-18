@@ -15,6 +15,8 @@ const Signup = () => {
       }
     })
 
+    localStorage.token = resp.data.authtoken
+
     if (resp.data.success)
       history("/landing")
   }
