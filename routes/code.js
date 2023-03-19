@@ -31,6 +31,7 @@ router.post('/add', fetchuser, [
   try {
     const snippet = await Snippet.create({
       user: req.user.id,
+      title: req.body.title,
       code: req.body.code
     });
 
@@ -43,12 +44,13 @@ router.post('/add', fetchuser, [
 })
 
 router.put('/update/:id', fetchuser, async (req, res) => {
-  const { code } = req.body;
+  const { title, code } = req.body;
   try {
     // Create a newNote object
-    const newCode = {};
+    const newCode = {}
 
-    newCode.code = code;
+    newCode.title = title
+    newCode.code = code
     newCode.date = now()
 
     let excode = await Snippet.findById(req.params.id);
@@ -61,6 +63,25 @@ router.put('/update/:id', fetchuser, async (req, res) => {
 
     excode = await Snippet.findByIdAndUpdate(req.params.id, { $set: newCode }, { new: true });
     res.json({ excode });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+
+})
+
+router.delete('/delete/:id', fetchuser, async (req, res) => {
+  try {
+    let code = await Snippet.findById(req.params.id);
+
+    if (!code)
+      return res.status(404).send("Not Found");
+
+    if (code.user.toString() !== req.user.id)
+      return res.status(401).send("Not Allowed");
+
+    code = await Snippet.findByIdAndDelete(req.params.id);
+    res.json({ "Success": "Note has been deleted", code: code });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");

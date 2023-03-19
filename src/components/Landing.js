@@ -9,15 +9,17 @@ import OutputDetails from './OutputDetails'
 import OutputWindow from './OutputWindow'
 import { defineTheme } from '../lib/defineTheme'
 import CustomInput from './CustomInput'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const pyDefault = 'print("Welcome to Pro-Code!")'
 
 const Landing = () => {
+  const history = useNavigate()
   const location = useLocation()
   const propsData = location.state
   const [user, setUser] = useState("")
-  const [code, setCode] = useState(pyDefault)
+  const [title, setTitle] = useState(propsData ? propsData.title : "")
+  const [code, setCode] = useState(propsData ? propsData.code : pyDefault)
   const [language, setLanguage] = useState(langOptions[0])
   const [theme, setTheme] = useState('light')
   const [processing, setProcessing] = useState(null)
@@ -31,6 +33,10 @@ const Landing = () => {
   const handleThemeChange = (th) => {
     if (['light', 'vs-dark'].includes(th.value)) setTheme(th)
     else defineTheme(th.value).then((_) => setTheme(th))
+  }
+
+  const handleChange = (e) => {
+    setTitle(e.target.value)
   }
 
   const handleCompile = async () => {
@@ -117,16 +123,22 @@ const Landing = () => {
   }
 
   const getUser = async () => {
-    const resp = await axios.post("http://localhost:5000/api/auth/getUser", {}, {
-      headers: {
-        'auth-token': localStorage.token
-      }
-    })
-    setUser(resp.data.email)
+    try {
+      const resp = await axios.post("http://localhost:5000/api/auth/getUser", {}, {
+        headers: {
+          'auth-token': localStorage.token
+        }
+      })
+      setUser(resp.data.email)
+    }
+    catch (error) {
+      history('/')
+    }
   }
 
   const addCode = async () => {
     const resp = await axios.post("http://localhost:5000/api/snippet/add", {
+      title: title,
       code: code
     }, {
       headers: {
@@ -137,6 +149,7 @@ const Landing = () => {
 
   const updateCode = async (id) => {
     const resp = await axios.put(`http://localhost:5000/api/snippet/update/${id}`, {
+      title: title,
       code: code
     }, {
       headers: {
@@ -164,11 +177,12 @@ const Landing = () => {
           <span>
             Signed in with {user}
           </span>
-          <button className='border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-red-600 text-white hover:shadow transition duration-150 text-sm'>Logout</button>
+          <button className='border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-red-600 text-white hover:shadow transition duration-150 text-sm' onClick={() => { localStorage.removeItem("token"); getUser() }}>Logout</button>
         </div>
       </div>
       <div className='grid grid-cols-1 md:grid-cols-3 items-start px-4 py-4 gap-4'>
         <div className='col-span-1 md:col-span-2'>
+          <input type="text" placeholder="Title" className='focus:outline-none w-full border-2 border-black z-10 rounded-md shadow-md px-4 py-2 hover:shadow-lg transition duration-150 bg-white mb-6' onChange={handleChange} value={title} />
           <EditorWindow
             code={code}
             onChange={onChange}
@@ -189,7 +203,7 @@ const Landing = () => {
               disabled={!code || processing}
               className={`mt-4 border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-green-700 text-white ${!code || processing ? 'opacity-50' : 'hover:shadow transition duration-150'}`}
             >
-              {processing ? "Processing..." : "Run Code"}
+              {processing ? "Processing..." : "Save & Run Code"}
             </button>
           </div>
           {outputDetails && <OutputDetails outputDetails={outputDetails} />}
