@@ -48,8 +48,6 @@ const Landing = () => {
       stdin: Buffer.from(customInput).toString('base64')
     }
 
-    console.log(formData)
-
     try {
       const response = await axios.post(process.env.REACT_APP_RAPID_API_URL, formData, {
         headers: {
@@ -63,8 +61,6 @@ const Landing = () => {
           fields: '*'
         }
       })
-
-      console.log(response.data)
 
       if (propsData)
         updateCode(propsData.id)
@@ -103,7 +99,6 @@ const Landing = () => {
 
       setProcessing(false)
       setOutputDetails(response.data)
-      console.log(response.data)
     } catch (error) {
       console.log(error)
       setProcessing(false)
@@ -165,8 +160,7 @@ const Landing = () => {
 
   return (
     <>
-      <div className='h-2 w-full bg-gradient-to-l from-pink-500 via-red-500 to-yellow-500'></div>
-      <div className='flex flex-row justify-around'>
+      <div className='flex flex-row justify-around px-2 md:px-0'>
         <div className="px-4 py-2">
           <LangDropdown onSelectChange={onSelectChange} />
         </div>
@@ -174,10 +168,10 @@ const Landing = () => {
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>
         <div className="flex items-center space-x-2">
-          <span>
+          <span className="text-sm md:text-base">
             Signed in with {user}
           </span>
-          <button className='border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-red-600 text-white hover:shadow transition duration-150 text-sm' onClick={() => { localStorage.removeItem("token"); getUser() }}>Logout</button>
+          <button className='border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-red-600 text-white hover:shadow transition duration-150 text-xs md:text-sm' onClick={() => { localStorage.removeItem("token"); getUser() }}>Logout</button>
         </div>
       </div>
       <div className='grid grid-cols-1 md:grid-cols-3 items-start px-4 py-4 gap-4'>

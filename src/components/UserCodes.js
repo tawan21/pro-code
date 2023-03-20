@@ -15,7 +15,6 @@ const UserCodes = () => {
         "auth-token": localStorage.token
       }
     })
-    console.log(resp.data)
   }
 
   const getCodesOfUser = async () => {
