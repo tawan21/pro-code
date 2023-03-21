@@ -49,18 +49,7 @@ const Landing = () => {
     }
 
     try {
-      const response = await axios.post(process.env.REACT_APP_RAPID_API_URL, formData, {
-        headers: {
-          'content-type': 'application/json',
-          'Content-Type': 'application/json',
-          'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
-          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY
-        },
-        params: {
-          base64_encoded: 'true',
-          fields: '*'
-        }
-      })
+      const response = await axios.post("https://pro-code.vercel.app/api/snippet/submit", formData)
 
       if (propsData)
         updateCode(propsData.id)
@@ -77,18 +66,9 @@ const Landing = () => {
 
   const checkStatus = async (token) => {
     try {
-      const response = await axios.get(process.env.REACT_APP_RAPID_API_URL + '/' + token, {
-        headers: {
-          'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
-          'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY
-        },
-        params: {
-          base64_encoded: 'true',
-          fields: '*'
-        }
-      })
+      const response = await axios.get(`https://pro-code.vercel.app/api/snippet/status/${token}`)
 
-      const statusId = response.data.status?.id
+      const statusId = response.data.id
 
       if (statusId === 1 || statusId === 2) {
         setTimeout(() => {

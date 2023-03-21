@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 const fetchuser = require('../database/fetchuser');
 const { now } = require('mongoose');
+const { default: axios } = require('axios');
+const CircularJSON = require('circular-json')
 
 router.get('/getByUser', fetchuser, async (req, res) => {
   try {
@@ -82,6 +84,50 @@ router.delete('/delete/:id', fetchuser, async (req, res) => {
 
     code = await Snippet.findByIdAndDelete(req.params.id);
     res.json({ "Success": "Note has been deleted", code: code });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+
+})
+
+router.post('/submit', [
+  body('formData', 'formData cannot be blank')
+], async (req, res) => {
+  try {
+    const response = await axios.post(process.env.REACT_APP_RAPID_API_URL, req.body, {
+      headers: {
+        'content-type': 'application/json',
+        'Content-Type': 'application/json',
+        'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+        'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY
+      },
+      params: {
+        base64_encoded: 'true',
+        fields: '*'
+      }
+    })
+    res.json(JSON.parse(CircularJSON.stringify(response.data)))
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+
+})
+
+router.get('/status/:token', async (req, res) => {
+  try {
+    const response = await axios.get(process.env.REACT_APP_RAPID_API_URL + '/' + req.params.token, {
+      headers: {
+        'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+        'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY
+      },
+      params: {
+        base64_encoded: 'true',
+        fields: '*'
+      }
+    })
+    res.json(JSON.parse(CircularJSON.stringify(response.data.status)))
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
