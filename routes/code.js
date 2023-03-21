@@ -91,9 +91,7 @@ router.delete('/delete/:id', fetchuser, async (req, res) => {
 
 })
 
-router.post('/submit', [
-  body('formData', 'formData cannot be blank')
-], async (req, res) => {
+router.post('/submit', async (req, res) => {
   try {
     const response = await axios.post(process.env.REACT_APP_RAPID_API_URL, req.body, {
       headers: {
