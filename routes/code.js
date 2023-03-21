@@ -125,7 +125,7 @@ router.get('/status/:token', async (req, res) => {
         fields: '*'
       }
     })
-    res.json(JSON.parse(CircularJSON.stringify(response.data.status)))
+    res.json(JSON.parse(CircularJSON.stringify(response.data)))
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");

@@ -68,7 +68,7 @@ const Landing = () => {
     try {
       const response = await axios.get(`https://pro-code.vercel.app/api/snippet/status/${token}`)
 
-      const statusId = response.data.id
+      const statusId = response.data.status?.id
 
       if (statusId === 1 || statusId === 2) {
         setTimeout(() => {
