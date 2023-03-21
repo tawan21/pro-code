@@ -10,7 +10,7 @@ const UserCodes = () => {
   const deleteCode = async (id) => {
     setCodes((codes) => codes.filter((code) => code._id !== id))
 
-    const resp = await axios.delete(`http://localhost:5000/api/snippet/delete/${id}`, {
+    const resp = await axios.delete(`https://pro-code.vercel.app/api/snippet/delete/${id}`, {
       headers: {
         "auth-token": localStorage.token
       }
@@ -19,7 +19,7 @@ const UserCodes = () => {
 
   const getCodesOfUser = async () => {
     try {
-      const resp = await axios.get('http://localhost:5000/api/snippet/getByUser', {
+      const resp = await axios.get('https://pro-code.vercel.app/api/snippet/getByUser', {
         headers: {
           'auth-token': localStorage.token
         }
