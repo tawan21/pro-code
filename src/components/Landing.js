@@ -119,7 +119,7 @@ const Landing = () => {
 
   const getUser = async () => {
     try {
-      const resp = await axios.post("http://localhost:5000/api/auth/getUser", {}, {
+      const resp = await axios.post("https://pro-code.vercel.app/api/auth/getUser", {}, {
         headers: {
           'auth-token': localStorage.token
         }
@@ -132,7 +132,7 @@ const Landing = () => {
   }
 
   const addCode = async () => {
-    const resp = await axios.post("http://localhost:5000/api/snippet/add", {
+    const resp = await axios.post("https://pro-code.vercel.app/api/snippet/add", {
       title: title,
       code: code
     }, {
@@ -143,7 +143,7 @@ const Landing = () => {
   }
 
   const updateCode = async (id) => {
-    const resp = await axios.put(`http://localhost:5000/api/snippet/update/${id}`, {
+    const resp = await axios.put(`https://pro-code.vercel.app/api/snippet/update/${id}`, {
       title: title,
       code: code
     }, {
