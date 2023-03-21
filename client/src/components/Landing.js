@@ -49,7 +49,7 @@ const Landing = () => {
     }
 
     try {
-      const response = await axios.post("https://pro-code.vercel.app/api/snippet/submit", formData)
+      const response = await axios.post("https://pro-code-tawan.vercel.app/api/snippet/submit", formData)
 
       if (propsData)
         updateCode(propsData.id)
@@ -66,7 +66,7 @@ const Landing = () => {
 
   const checkStatus = async (token) => {
     try {
-      const response = await axios.get(`https://pro-code.vercel.app/api/snippet/status/${token}`)
+      const response = await axios.get(`https://pro-code-tawan.vercel.app/api/snippet/status/${token}`)
 
       const statusId = response.data.status?.id
 
@@ -99,7 +99,7 @@ const Landing = () => {
 
   const getUser = async () => {
     try {
-      const resp = await axios.post("https://pro-code.vercel.app/api/auth/getUser", {}, {
+      const resp = await axios.post("https://pro-code-tawan.vercel.app/api/auth/getUser", {}, {
         headers: {
           'auth-token': localStorage.token
         }
@@ -112,7 +112,7 @@ const Landing = () => {
   }
 
   const addCode = async () => {
-    const resp = await axios.post("https://pro-code.vercel.app/api/snippet/add", {
+    const resp = await axios.post("https://pro-code-tawan.vercel.app/api/snippet/add", {
       title: title,
       code: code
     }, {
@@ -123,7 +123,7 @@ const Landing = () => {
   }
 
   const updateCode = async (id) => {
-    const resp = await axios.put(`https://pro-code.vercel.app/api/snippet/update/${id}`, {
+    const resp = await axios.put(`https://pro-code-tawan.vercel.app/api/snippet/update/${id}`, {
       title: title,
       code: code
     }, {

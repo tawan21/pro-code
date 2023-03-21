@@ -9,7 +9,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const resp = await axios.post("https://pro-code.vercel.app/api/auth/register", JSON.stringify({ name: details.name, email: details.email, password: details.password }), {
+    const resp = await axios.post("https://pro-code-tawan.vercel.app/api/auth/register", JSON.stringify({ name: details.name, email: details.email, password: details.password }), {
       headers: {
         'Content-Type': 'application/json'
       }
