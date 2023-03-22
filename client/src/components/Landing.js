@@ -140,14 +140,14 @@ const Landing = () => {
 
   return (
     <>
-      <div className='flex flex-row justify-around px-2 md:px-0'>
+      <div className='grid grid-cols-1 md:grid-cols-5 gap-2 justify-around px-2 md:px-0'>
         <div className="px-4 py-2">
           <LangDropdown onSelectChange={onSelectChange} />
         </div>
         <div className="px-4 py-2">
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 md:col-span-2">
           <span className="text-xs md:text-sm">
             Signed in with {user}
           </span>
