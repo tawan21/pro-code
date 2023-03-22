@@ -140,7 +140,7 @@ const Landing = () => {
 
   return (
     <>
-      <div className='grid grid-cols-1 md:grid-cols-5 gap-2 justify-around px-2 md:px-0'>
+      <div className='grid grid-cols-1 md:grid-cols-5 gap-2 justify-center px-2 md:px-0'>
         <div className="px-4 py-2">
           <LangDropdown onSelectChange={onSelectChange} />
         </div>
