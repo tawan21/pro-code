@@ -148,7 +148,7 @@ const Landing = () => {
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-sm md:text-base">
+          <span className="text-xs md:text-sm">
             Signed in with {user}
           </span>
           <button className='border-2 border-black z-10 rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0)] px-4 py-2 flex-shrink-0 bg-red-600 text-white hover:shadow transition duration-150 text-xs md:text-sm' onClick={() => { localStorage.removeItem("token"); getUser() }}>Logout</button>
